@@ -11,7 +11,7 @@ import '../../modules/home/model/update_password_model.dart';
 
 abstract class BaseHomeRemoteDataSource {
   Future<UserModel> updateInformation(UpdateInfoModel updateInfoModel);
-  Future<UserModel> updatePassword(UpdatePasswordModel updatePasswordModel);
+  Future<void> updatePassword(UpdatePasswordModel updatePasswordModel);
   Future<void> deleteUser(String token);
 }
 
@@ -44,8 +44,7 @@ class HomeRemoteDataSource extends BaseHomeRemoteDataSource {
   }
 
   @override
-  Future<UserModel> updatePassword(
-      UpdatePasswordModel updatePasswordModel) async {
+  Future<void> updatePassword(UpdatePasswordModel updatePasswordModel) async {
     if (updatePasswordModel.currentPassword.isEmpty) {
       throw const ServerException(
           ErrorMessageModel(statusMessage: 'Current Password is required'));
@@ -56,19 +55,32 @@ class HomeRemoteDataSource extends BaseHomeRemoteDataSource {
       throw const ServerException(
           ErrorMessageModel(statusMessage: 'Confirm Password is required'));
     }
-    final req = await http.post(Uri.parse(AppConstance.updatePasswordApi),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': updatePasswordModel.token
-        },
-        body: jsonEncode(updatePasswordModel.toJson()));
-    Map<String, dynamic> res = jsonDecode(req.body);
-    if (req.statusCode == 200) {
-      return UserModel.fromJson(res['data'], token: updatePasswordModel.token);
-    } else {
-      throw ServerException(ErrorMessageModel.fromJson(res));
+    final req =
+        await updatePasswordModel.toJson(AppConstance.updatePasswordApi);
+    req.headers['Accept'] = 'application/json';
+    req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    req.headers['Authorization'] = updatePasswordModel.token;
+
+    final stream = await req.send();
+    final res = await http.Response.fromStream(stream);
+    if (res.statusCode != 200) {
+      throw ServerException(ErrorMessageModel.fromJson(jsonDecode(res.body)));
     }
+    // final req = await http.post(Uri.parse(AppConstance.updatePasswordApi),
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/x-www-form-urlencoded',
+    //       'Authorization': updatePasswordModel.token
+    //     },
+    //     body: jsonEncode(updatePasswordModel.toJson()));
+    // Map<String, dynamic> res = jsonDecode(req.body);
+    // if (req.statusCode == 200) {
+    //   print(res);
+    //   return UserModel.fromJson(res['data'], token: updatePasswordModel.token);
+    // } else {
+    //   print(res);
+    //   throw ServerException(ErrorMessageModel.fromJson(res));
+    // }
   }
 
   @override

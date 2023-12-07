@@ -27,7 +27,7 @@ class HomeRepo extends BaseHomeRepo {
   }
 
   @override
-  Future<Either<Failure, UserModel>> updatePassword(
+  Future<Either<Failure, void>> updatePassword(
       UpdatePasswordModel updatePasswordModel) async {
     try {
       final result =

@@ -8,12 +8,10 @@ class GeneralTextFieldWidget extends StatefulWidget {
       {super.key,
       required this.hintText,
       required this.textEditingController,
-      this.isPassword = false,
-      this.isPhoneNumber = false});
+      this.isPassword = false});
   final String hintText;
   final TextEditingController textEditingController;
   final bool isPassword;
-  final bool isPhoneNumber;
 
   @override
   State<GeneralTextFieldWidget> createState() => _GeneralTextFieldState();
@@ -36,10 +34,6 @@ class _GeneralTextFieldState extends State<GeneralTextFieldWidget> {
       child: TextField(
         controller: widget.textEditingController,
         cursorColor: Colors.black,
-        keyboardType: widget.isPhoneNumber ? TextInputType.number : null,
-        inputFormatters: widget.isPhoneNumber
-            ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
-            : null,
         obscureText: widget.isPassword && !isSeePassword ? true : false,
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -48,13 +42,6 @@ class _GeneralTextFieldState extends State<GeneralTextFieldWidget> {
             fontWeight: FontWeight.bold,
             fontFamily: FontsAssets.alexandriaFont),
         decoration: InputDecoration(
-            prefixIcon: widget.isPhoneNumber
-                ? const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Image(
-                        image: AssetImage(ImgAssets.emiratesFlag), width: 40),
-                  )
-                : null,
             suffixIcon: widget.isPassword
                 ? IconButton(
                     onPressed: () {

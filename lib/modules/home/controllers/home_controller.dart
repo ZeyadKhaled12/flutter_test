@@ -39,7 +39,6 @@ class HomeController extends GetxController {
       requestState.value = RequestState.error;
       errorMessage.value = l.message;
     }, (r) async {
-      userModel.value = r;
       requestState.value = RequestState.loaded;
     });
   }

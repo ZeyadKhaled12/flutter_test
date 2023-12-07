@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertest/core/enums.dart';
+import 'package:fluttertest/core/general_widgets/general_phone_text_field_widget.dart';
 import 'package:fluttertest/modules/auth/model/register_model.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_field/countries.dart';
 
 import '../../../core/general_widgets/general_button_widget.dart';
 import '../../../core/general_widgets/general_snack_bar.dart';
@@ -27,6 +29,7 @@ class _RegisterBodyState extends State<RegisterBody> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  Country? country;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +48,14 @@ class _RegisterBodyState extends State<RegisterBody> {
                 GeneralTextFieldWidget(
                     hintText: 'Full Name',
                     textEditingController: nameController),
-                GeneralTextFieldWidget(
+                GPhoneTextFieldWidget(
                     hintText: '55994435',
-                    isPhoneNumber: true,
-                    textEditingController: phoneNumberController),
+                    controller: phoneNumberController,
+                    onCountryChanged: (value) {
+                      setState(() {
+                        country = value;
+                      });
+                    }),
                 GeneralTextFieldWidget(
                     hintText: 'Email Address',
                     textEditingController: emailController),
@@ -70,7 +77,8 @@ class _RegisterBodyState extends State<RegisterBody> {
                     borderColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       await controller.register(RegisterModel(
-                          countryCode: '+971',
+                          countryCode:
+                              country != null ? country!.dialCode : '971',
                           name: nameController.text,
                           passwordConfirm: confirmPasswordController.text,
                           phone: phoneNumberController.text,

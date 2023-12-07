@@ -24,7 +24,6 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   void initState() {
     homeController.onChanged(Get.arguments);
-    print(homeController.userModel.value.token);
     super.initState();
   }
 
@@ -43,7 +42,8 @@ class _HomeBodyState extends State<HomeBody> {
             ),
             ListTileWidget(
               iconData: Icons.phone_android_outlined,
-              value: homeController.userModel.value.phone,
+              value:
+                  '${homeController.userModel.value.countryCode} ${homeController.userModel.value.phone}',
             ),
             ListTileWidget(
               iconData: Icons.email_outlined,

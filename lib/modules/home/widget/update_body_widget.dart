@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertest/core/general_widgets/general_phone_text_field_widget.dart';
+import 'package:intl_phone_field/countries.dart';
 
 import '../../../core/general_widgets/general_button_widget.dart';
 import '../../../core/general_widgets/general_text_field_widget.dart';
@@ -13,7 +15,8 @@ class HomeUpdateBodyWidget extends StatelessWidget {
       required this.title,
       required this.textEditingControllers,
       required this.onPressed,
-      required this.isLoading});
+      required this.isLoading,
+      this.onCountryChanged});
   final String title;
   final List<String> textFieldsTexts;
   final List<bool> textFieldsIsPassword;
@@ -21,6 +24,7 @@ class HomeUpdateBodyWidget extends StatelessWidget {
   final List<TextEditingController> textEditingControllers;
   final Function() onPressed;
   final bool isLoading;
+  final Function(Country country)? onCountryChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +38,15 @@ class HomeUpdateBodyWidget extends StatelessWidget {
           Column(
             children: List.generate(
               textFieldsTexts.length,
-              (index) => GeneralTextFieldWidget(
-                  hintText: textFieldsTexts[index],
-                  isPhoneNumber: textFieldsIsPhone[index],
-                  isPassword: textFieldsIsPassword[index],
-                  textEditingController: textEditingControllers[index]),
+              (index) => textFieldsIsPhone[index]
+                  ? GPhoneTextFieldWidget(
+                      hintText: textFieldsTexts[index],
+                      controller: textEditingControllers[index],
+                      onCountryChanged: onCountryChanged!)
+                  : GeneralTextFieldWidget(
+                      hintText: textFieldsTexts[index],
+                      isPassword: textFieldsIsPassword[index],
+                      textEditingController: textEditingControllers[index]),
             ),
           ),
           const Padding(padding: EdgeInsets.only(top: 15)),

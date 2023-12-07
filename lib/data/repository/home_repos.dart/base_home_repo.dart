@@ -7,7 +7,7 @@ import '../../../modules/home/model/update_password_model.dart';
 abstract class BaseHomeRepo {
   Future<Either<Failure, UserModel>> updateInfo(
       UpdateInfoModel updateInfoModel);
-  Future<Either<Failure, UserModel>> updatePassword(
+  Future<Either<Failure, void>> updatePassword(
       UpdatePasswordModel updatePasswordModel);
   Future<Either<Failure, void>> deleterUser(String token);
   Future<void> updatePrefUser(UserModel userModel);
